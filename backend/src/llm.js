@@ -1,6 +1,6 @@
 const GEMINI_URL =
   'https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent';
-const DEFAULT_MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
+const DEFAULT_MODEL = process.env.GEMINI_MODEL || 'gemini-3.5-flash';
 const TIMEOUT_MS = 12000;
 
 export const llmConfigured = Boolean(process.env.GEMINI_API_KEY);
@@ -34,7 +34,11 @@ async function generate(systemInstruction, parts, generationConfig = {}) {
         contents: [{ role: 'user', parts }],
         generationConfig: {
           temperature: 0.4,
-          maxOutputTokens: 400,
+          maxOutputTokens: 800,
+          // gemini-3.x is a thinking model: its reasoning tokens eat the
+          // output budget and truncate the JSON. Coaching is a small,
+          // latency-sensitive task — think less, answer now.
+          thinkingConfig: { thinkingBudget: 0 },
           ...generationConfig,
         },
       }),

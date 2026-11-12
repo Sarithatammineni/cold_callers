@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { api } from './api.js';
 import sheet from './stageSheet.json';
+import { ThemeToggle } from './theme.jsx';
 
 const pad = (n) => String(n).padStart(2, '0');
 const clock = (secs) => `${pad(Math.floor(secs / 60))}:${pad(Math.max(0, secs % 60))}`;
@@ -260,6 +261,7 @@ export default function LiveCall({ initial, stages, onChange, onFinished }) {
           <h1 style={{ marginTop: 4 }}>{call.prospect_name}</h1>
           {call.company && <p className="topbar__sub">{call.company}</p>}
         </div>
+        <ThemeToggle />
         <span className="timer">{clock(onCall)}</span>
       </header>
 

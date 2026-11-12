@@ -90,6 +90,20 @@ The browser only ever talks to Render. Render is the only thing that talks to Su
 | `GET` | `/api/calls` | List past calls with the stage each reached. |
 | `GET` | `/api/calls/:id` | One call with its stage results. |
 | `POST` | `/api/coach` | LLM: what to say in the next 20 seconds. |
+| `GET` | `/api/stream` | Server-sent events: `call.opened`, `stage.saved`, `call.closed`. |
+
+## Live updates and theme
+
+Every write to the API is pushed to every open screen over `GET /api/stream`. A call
+started on one device shows up in another's history immediately, without a refresh and
+without polling: the API is the only writer, so it already knows when something changed.
+The stream sends a keep-alive comment every 20 seconds so Render's proxy does not close
+it, and the browser reconnects by itself; while the stream is down the history screen
+falls back to a slow refresh rather than pretending to be live.
+
+The screen has a dark and a light theme, switched from the header and remembered in
+`localStorage`, with the operating system's preference used the first time. Neither
+theme uses an accent colour: emphasis is white-on-black (or black-on-white) plus weight.
 
 Errors are JSON: `{ "error": "human sentence", "code": "MACHINE_CODE" }`.
 CORS allows only the origins in `CORS_ORIGINS`; a foreign `Origin` gets `403`.

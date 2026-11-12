@@ -3,6 +3,7 @@ import sheet from './stageSheet.json';
 import { api, API_URL } from './api.js';
 import LiveCall from './LiveCall.jsx';
 import History from './History.jsx';
+import { ThemeToggle } from './theme.jsx';
 
 const ACTIVE_KEY = 'ccc:active:v1';
 
@@ -97,6 +98,7 @@ export default function App() {
               Past calls
             </button>
           )}
+          <ThemeToggle />
         </header>
       )}
 

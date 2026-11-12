@@ -1,25 +1,65 @@
 /* ==========================================================================
    Cold Call Coach
 
-   Dark and quiet, the way a streaming interface is: one near-black ground, one
-   white type colour, one weight doing all the emphasis, and no accent hue
-   fighting the sentence you are trying to read. Emphasis is carried by
-   inversion and weight, never by colour.
+   One quiet ground, one strong colour, no accent hue. Dark is the default
+   because a call happens at a desk in the evening as often as in daylight; the
+   light theme is the same sheet on white. Every value below comes from a token,
+   so the two themes differ by numbers only.
    ========================================================================== */
 
-:root {
+:root,
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
   --bg: #0b0b0b;
   --bg-2: #101010;
   --surface: #171717;
   --surface-2: #1f1f1f;
+  --surface-3: #262626;
 
   --line: #2b2b2b;
   --line-2: #3d3d3d;
+  --line-3: #5f5f5f;
 
   --text: #f2f2f2;
   --text-2: #a8a8a8;
   --text-3: #737373;
 
+  /* The inverted block: white on black here, black on white in light. */
+  --strong: #ffffff;
+  --on-strong: #0b0b0b;
+  --on-strong-soft: #4a4a4a;
+  --strong-hover: #d6d6d6;
+
+  --field: #101010;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+
+  --bg: #ffffff;
+  --bg-2: #fafafa;
+  --surface: #ffffff;
+  --surface-2: #f4f4f4;
+  --surface-3: #ececec;
+
+  --line: #e6e6e6;
+  --line-2: #d4d4d4;
+  --line-3: #a8a8a8;
+
+  --text: #0d0d0d;
+  --text-2: #4f4f4f;
+  --text-3: #767676;
+
+  --strong: #0d0d0d;
+  --on-strong: #ffffff;
+  --on-strong-soft: rgba(255, 255, 255, 0.72);
+  --strong-hover: #333333;
+
+  --field: #fafafa;
+}
+
+:root {
   --text-stack: "Archivo", "Helvetica Neue", Helvetica, Arial, sans-serif;
   --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
 }
@@ -54,8 +94,8 @@ select {
 }
 
 ::selection {
-  background: #f2f2f2;
-  color: #0b0b0b;
+  background: var(--text);
+  color: var(--bg);
 }
 
 .app {
@@ -79,7 +119,7 @@ select {
   z-index: 20;
   display: flex;
   align-items: flex-end;
-  gap: 14px;
+  gap: 10px;
   margin: 0 -20px;
   padding: 16px 20px 14px;
   background: var(--bg);
@@ -97,7 +137,7 @@ select {
   font-weight: 800;
   line-height: 1.05;
   letter-spacing: -0.025em;
-  color: #ffffff;
+  color: var(--text);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -135,8 +175,12 @@ select {
 
 .topbar .btn {
   flex: 0 0 auto;
-  padding: 7px 12px;
-  font-size: 12.5px;
+  padding: 7px 10px;
+  font-size: 12px;
+}
+
+.theme-toggle {
+  min-width: 58px;
 }
 
 /* -------------------------------------------------------------- stage strip */
@@ -174,7 +218,7 @@ select {
 
 .stagechip.is-done {
   background: var(--surface-2);
-  border-color: #4a4a4a;
+  border-color: var(--line-3);
 }
 
 .stagechip.is-done .stagechip__n {
@@ -182,12 +226,12 @@ select {
 }
 
 .stagechip.is-current {
-  background: #ffffff;
-  border-color: #ffffff;
+  background: var(--strong);
+  border-color: var(--strong);
 }
 
 .stagechip.is-current .stagechip__n {
-  color: #0b0b0b;
+  color: var(--on-strong);
 }
 
 /* -------------------------------------------------------------------- card */
@@ -219,7 +263,7 @@ select {
   font-weight: 800;
   line-height: 1.08;
   letter-spacing: -0.025em;
-  color: #ffffff;
+  color: var(--text);
 }
 
 .stage-name__n {
@@ -235,7 +279,7 @@ select {
   margin: 14px 0 0;
   font-size: 15.5px;
   line-height: 1.55;
-  color: #c9c9c9;
+  color: var(--text-2);
 }
 
 .purpose__k {
@@ -266,7 +310,7 @@ select {
 
 .section__label b {
   font-weight: 500;
-  color: #ffffff;
+  color: var(--text);
 }
 
 /* -------------------------------------------------- what prospects say */
@@ -286,7 +330,7 @@ select {
   border-radius: 2px;
   font-size: 15px;
   line-height: 1.45;
-  color: #dedede;
+  color: var(--text);
 }
 
 .say__mean {
@@ -299,7 +343,7 @@ select {
 
 .say__mean b {
   font-weight: 500;
-  color: #bdbdbd;
+  color: var(--text-2);
 }
 
 .watchout {
@@ -310,7 +354,7 @@ select {
   border-radius: 2px;
   font-size: 13.5px;
   line-height: 1.45;
-  color: #cfcfcf;
+  color: var(--text-2);
 }
 
 .watchout b {
@@ -340,20 +384,20 @@ select {
   border-radius: 2px;
   font-size: 13.5px;
   font-weight: 500;
-  color: #d0d0d0;
+  color: var(--text-2);
   cursor: pointer;
   transition: background 0.12s, color 0.12s, border-color 0.12s;
 }
 
 .tap:hover {
-  border-color: #6a6a6a;
-  color: #ffffff;
+  border-color: var(--line-3);
+  color: var(--text);
 }
 
 .tap.is-on {
-  background: #ffffff;
-  border-color: #ffffff;
-  color: #0b0b0b;
+  background: var(--strong);
+  border-color: var(--strong);
+  color: var(--on-strong);
   font-weight: 600;
 }
 
@@ -364,13 +408,13 @@ select {
   min-height: 118px;
   resize: vertical;
   padding: 12px 14px;
-  background: var(--bg-2);
+  background: var(--field);
   border: 1px solid var(--line);
   border-radius: 2px;
   font-family: var(--text-stack);
   font-size: 15.5px;
   line-height: 1.45;
-  color: #ededed;
+  color: var(--text);
 }
 
 .words::placeholder {
@@ -380,7 +424,7 @@ select {
 
 .words:focus {
   outline: none;
-  border-color: #f2f2f2;
+  border-color: var(--text);
 }
 
 .hint {
@@ -394,20 +438,20 @@ select {
 .btn {
   padding: 11px 16px;
   background: transparent;
-  border: 1px solid #4a4a4a;
+  border: 1px solid var(--line-3);
   border-radius: 2px;
   font-size: 12.5px;
   font-weight: 600;
   letter-spacing: 0.01em;
-  color: #ededed;
+  color: var(--text);
   cursor: pointer;
   transition: background 0.12s, color 0.12s, border-color 0.12s;
 }
 
 .btn:hover:not(:disabled) {
-  background: #ffffff;
-  border-color: #ffffff;
-  color: #0b0b0b;
+  background: var(--strong);
+  border-color: var(--strong);
+  color: var(--on-strong);
 }
 
 .btn:disabled {
@@ -416,26 +460,27 @@ select {
 }
 
 .btn--primary {
-  background: #ffffff;
-  border-color: #ffffff;
-  color: #0b0b0b;
+  background: var(--strong);
+  border-color: var(--strong);
+  color: var(--on-strong);
 }
 
 .btn--primary:hover:not(:disabled) {
-  background: #d6d6d6;
-  border-color: #d6d6d6;
+  background: var(--strong-hover);
+  border-color: var(--strong-hover);
+  color: var(--on-strong);
 }
 
 .btn--ghost {
   background: transparent;
   border-color: var(--line-2);
-  color: #d8d8d8;
+  color: var(--text-2);
 }
 
 .btn--danger {
   background: transparent;
-  border-color: #6a6a6a;
-  color: #ededed;
+  border-color: var(--line-3);
+  color: var(--text);
 }
 
 .btn--block {
@@ -467,7 +512,7 @@ select {
 }
 
 .next-up:hover {
-  background: #262626;
+  background: var(--surface-3);
 }
 
 .next-up__k {
@@ -484,7 +529,7 @@ select {
   margin-top: 5px;
   font-size: 15px;
   line-height: 1.4;
-  color: #e8e8e8;
+  color: var(--text);
 }
 
 /* ------------------------------------------------------------------ coach */
@@ -493,7 +538,7 @@ select {
   margin-top: 14px;
   padding: 16px;
   background: var(--bg-2);
-  border: 1px solid #333333;
+  border: 1px solid var(--line-2);
   border-radius: 2px;
 }
 
@@ -501,7 +546,7 @@ select {
   margin: 0 0 10px;
   font-size: 16.5px;
   line-height: 1.45;
-  color: #f2f2f2;
+  color: var(--text);
 }
 
 .coach-out__line:last-child {
@@ -533,24 +578,26 @@ select {
   margin-top: 14px;
   padding: 10px 12px;
   background: var(--surface-2);
-  border-left: 2px solid #8a8a8a;
+  border-left: 2px solid var(--line-3);
   border-radius: 2px;
   font-size: 13.5px;
   line-height: 1.45;
-  color: #dcdcdc;
+  color: var(--text-2);
 }
 
+/* No red anywhere: a failed action is marked by the brightest rule on screen. */
 .note--error {
-  border-left-color: #f2f2f2;
+  border-left-color: var(--text);
+  color: var(--text);
 }
 
 .note--ok {
-  border-left-color: #6f6f6f;
+  border-left-color: var(--line-3);
 }
 
 .skeleton {
   height: 14px;
-  background: #242424;
+  background: var(--surface-3);
   border-radius: 2px;
 }
 
@@ -572,19 +619,19 @@ select {
   border: 1px solid var(--line);
   border-radius: 2px;
   font-size: 15px;
-  color: #dcdcdc;
+  color: var(--text-2);
   cursor: pointer;
   transition: border-color 0.12s, background 0.12s;
 }
 
 .outcome:hover {
-  border-color: #5a5a5a;
+  border-color: var(--line-3);
 }
 
 .outcome.is-on {
-  background: #ffffff;
-  border-color: #ffffff;
-  color: #0b0b0b;
+  background: var(--strong);
+  border-color: var(--strong);
+  color: var(--on-strong);
 }
 
 .outcome__mark {
@@ -592,14 +639,14 @@ select {
   width: 14px;
   height: 14px;
   margin-top: 3px;
-  border: 1px solid #7a7a7a;
+  border: 1px solid var(--line-3);
   border-radius: 50%;
 }
 
 .outcome.is-on .outcome__mark {
-  border-color: #0b0b0b;
-  background: #0b0b0b;
-  box-shadow: inset 0 0 0 2.5px #ffffff;
+  border-color: var(--on-strong);
+  background: var(--on-strong);
+  box-shadow: inset 0 0 0 2.5px var(--strong);
 }
 
 .outcome__meta {
@@ -610,10 +657,19 @@ select {
 }
 
 .outcome.is-on .outcome__meta {
-  color: #4a4a4a;
+  color: var(--on-strong-soft);
 }
 
 /* ---------------------------------------------------------------- history */
+
+.live-note {
+  margin: 14px 0 0;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
 
 .filters {
   display: flex;
@@ -634,14 +690,14 @@ select {
 }
 
 .filter:hover {
-  border-color: #5a5a5a;
+  border-color: var(--line-3);
   color: var(--text);
 }
 
 .filter.is-on {
-  background: #ffffff;
-  border-color: #ffffff;
-  color: #0b0b0b;
+  background: var(--strong);
+  border-color: var(--strong);
+  color: var(--on-strong);
 }
 
 .callrow {
@@ -658,7 +714,7 @@ select {
 }
 
 .callrow:hover {
-  background: #1c1c1c;
+  background: var(--surface-2);
   border-color: var(--line-2);
 }
 
@@ -674,7 +730,7 @@ select {
   font-size: 17px;
   font-weight: 600;
   letter-spacing: -0.01em;
-  color: #ffffff;
+  color: var(--text);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -709,22 +765,22 @@ select {
 }
 
 .badge--stage {
-  background: #ffffff;
-  border-color: #ffffff;
-  color: #0b0b0b;
+  background: var(--strong);
+  border-color: var(--strong);
+  color: var(--on-strong);
 }
 
 .badge--good {
-  border-color: #6a6a6a;
-  color: #ffffff;
+  border-color: var(--line-3);
+  color: var(--text);
 }
 
 .badge--warm {
-  color: #cfcfcf;
+  color: var(--text-2);
 }
 
 .badge--bad {
-  color: #9a9a9a;
+  color: var(--text-3);
   border-color: var(--line);
 }
 
@@ -747,7 +803,7 @@ select {
   gap: 7px;
   font-size: 13.5px;
   font-weight: 600;
-  color: #e8e8e8;
+  color: var(--text);
 }
 
 .trail__n {
@@ -769,7 +825,7 @@ select {
   border-radius: 2px;
   font-size: 14.5px;
   line-height: 1.45;
-  color: #dedede;
+  color: var(--text);
 }
 
 /* --------------------------------------------------------------- start form */
@@ -797,7 +853,7 @@ select {
   font-size: 17.5px;
   font-weight: 500;
   letter-spacing: -0.01em;
-  color: #ffffff;
+  color: var(--text);
 }
 
 .field input::placeholder {
@@ -807,14 +863,14 @@ select {
 
 .field input:focus {
   outline: none;
-  border-bottom-color: #ffffff;
+  border-bottom-color: var(--text);
 }
 
 .big-lead {
   margin: 0;
   font-size: 17px;
   line-height: 1.5;
-  color: #c9c9c9;
+  color: var(--text-2);
 }
 
 .stage-index {
@@ -851,7 +907,7 @@ select {
   margin-bottom: 2px;
   font-size: 15.5px;
   font-weight: 600;
-  color: #f2f2f2;
+  color: var(--text);
 }
 
 .stage-index span {

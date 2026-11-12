@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { supabase, requireDb, dbError, pingDb, dbConfigured } from './db.js';
 import { coach, debrief, llmConfigured } from './llm.js';
+import { broadcast, openStream, streamClients } from './events.js';
 
 const router = Router();
 const startedAt = Date.now();
@@ -30,9 +31,17 @@ router.get(
       time: new Date().toISOString(),
       db,
       llm: { configured: llmConfigured, model: process.env.GEMINI_MODEL || 'gemini-3.5-flash' },
+      realtime: { listeners: streamClients() },
     });
   })
 );
+
+/* ---------------------------------------------------------------- realtime */
+
+// Long-lived response: every write below is pushed down this pipe.
+router.get('/api/stream', (req, res) => {
+  openStream(req, res);
+});
 
 /* ------------------------------------------------------------------ stages */
 
@@ -79,6 +88,7 @@ router.post(
       .order('number', { ascending: true });
     if (stageError) throw dbError(stageError);
 
+    broadcast('call.opened', { call: data });
     res.status(201).json({ call: data, stages: stages || [] });
   })
 );
@@ -190,6 +200,14 @@ router.post(
       p_stage: stageNumber,
     });
 
+    broadcast('stage.saved', {
+      call_id: row.call_id,
+      stage_number: stageNumber,
+      what_happened: row.what_happened,
+      seconds_on_stage: row.seconds_on_stage,
+      skipped: row.skipped,
+    });
+
     res.status(201).json({ stage_result: data });
   })
 );
@@ -249,11 +267,16 @@ router.post(
           prospectWords: words,
           outcome: call.outcome,
         });
-      } catch {
-        debriefResult = null; // a slow or missing LLM must never fail the save
+      } catch (error) {
+        // A slow or rate-limited model must never fail the save, but it must
+        // not vanish either: the code alone says whether it was the key, the
+        // network or a timeout. The prospect's words are never logged.
+        console.warn('debrief skipped:', error.code || error.name || 'ERROR', '-', error.message);
+        debriefResult = null;
       }
     }
 
+    broadcast('call.closed', { call, debrief: debriefResult });
     res.json({ call, debrief: debriefResult });
   })
 );

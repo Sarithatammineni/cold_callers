@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import sheet from './stageSheet.json';
-import { api, API_URL } from './api.js';
+import { api } from './api.js';
 import LiveCall from './LiveCall.jsx';
 import History from './History.jsx';
 import { ThemeToggle } from './theme.jsx';
@@ -30,10 +30,10 @@ function persistActive(state) {
 
 export default function App() {
   const [stages, setStages] = useState(sheet.stages);
-  const [stagesFromDb, setStagesFromDb] = useState(false);
+
   const [active, setActive] = useState(loadActive);
   const [view, setView] = useState(() => (loadActive() ? 'live' : 'start'));
-  const [health, setHealth] = useState(null);
+
 
   useEffect(() => {
     let cancelled = false;
@@ -42,17 +42,11 @@ export default function App() {
       .then((res) => {
         if (!cancelled && Array.isArray(res.stages) && res.stages.length) {
           setStages(res.stages);
-          setStagesFromDb(true);
         }
       })
       .catch(() => {
         /* bundled sheet stays on screen; nothing here is worth interrupting for */
       });
-
-    api
-      .health()
-      .then((h) => !cancelled && setHealth(h))
-      .catch(() => !cancelled && setHealth({ status: 'unreachable' }));
 
     return () => {
       cancelled = true;
@@ -115,24 +109,7 @@ export default function App() {
 
       {view === 'history' && <History stages={stages} />}
 
-      <footer className="footer-note">
-        {health?.status === 'ok' ? (
-          <>
-            Connected · {API_URL}
-            <br />
-            LLM {health.llm?.configured ? health.llm.model : 'not configured'} ·{' '}
-            {stagesFromDb ? 'stages from Supabase' : 'stages bundled (Supabase not reachable)'}
-          </>
-        ) : health === null ? (
-          'Checking the server…'
-        ) : (
-          <>
-            Server asleep or unreachable — {API_URL}
-            <br />
-            Render free instances wake on the first request, up to about a minute.
-          </>
-        )}
-      </footer>
+      <div className="spacer" />
     </div>
   );
 }

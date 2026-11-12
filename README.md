@@ -12,9 +12,20 @@ is saved, and a second screen lists past calls with the stage each one reached.
 
 | | |
 | --- | --- |
-| **Vercel app (the screen)** | `TBD — after deploy` |
-| **Render health endpoint** | `TBD — after deploy` (`GET /health`) |
-| **GitHub repo** | `TBD — after publish` |
+| **Vercel app (the screen)** | https://cold-call-coach-rose.vercel.app |
+| **Render health endpoint** | https://cold-call-coach-api.onrender.com/health |
+| **GitHub repo** | https://github.com/Sarithatammineni/cold_callers |
+
+### Deploy status
+
+| Part | State |
+| --- | --- |
+| The screen on Vercel | **Live** — builds clean, serves the app. It shows "Server asleep or unreachable" until the Render service exists. |
+| The API on Render | **Not created yet.** The Render account behind the API key has no payment method on file, and Render refuses `POST /v1/services` with `402 Payment information is required`. Create it from the dashboard (below) or add a card, then it deploys itself from `render.yaml`. |
+| Supabase tables | **Not created yet.** The secret key authenticates against the Data API, but DDL cannot be sent through PostgREST. Run the two SQL files in the Supabase SQL editor. |
+
+`VITE_API_URL` on Vercel already points at `https://cold-call-coach-api.onrender.com`,
+the hostname `render.yaml` produces, so the screen needs no redeploy once the service exists.
 
 ## The eight stages
 

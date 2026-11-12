@@ -66,6 +66,13 @@ the product keeps working — no screen depends on the model.
 `thinkingConfig: { thinkingBudget: 0 }` with an 800-token cap. Without it the reasoning
 tokens eat the output budget and the coaching JSON is truncated mid-string.
 
+The free tier has a request quota. When it is spent, Gemini answers `429` — and while
+throttled it sometimes stalls instead of answering, so the request hits the 18-second
+ceiling. Both cases come back as `LLM_QUOTA` / `LLM_TIMEOUT` with a plain sentence the
+screen shows under the button; the API never flattens them into "something went wrong".
+Everything else — the stages, the taps, saving a stage, closing a call, the history —
+works with no model at all. Quota returns with the provider's window, or with billing.
+
 ## Stack
 
 | Part | Service | Tier |

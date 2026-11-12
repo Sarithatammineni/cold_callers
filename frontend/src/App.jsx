@@ -78,17 +78,12 @@ export default function App() {
     setView('history');
   }, []);
 
-  const dbLive = health?.db?.ok && health?.llm?.configured;
-
   return (
     <div className={`app${view === 'history' ? ' app--wide' : ''}`}>
       {view !== 'live' && (
         <header className="topbar">
           <div className="topbar__title">
-            <div className="brand">
-              <span className={`brand__dot${dbLive ? ' brand__dot--live' : ''}`} />
-              {stagesFromDb ? 'Cold call coach' : 'Cold call coach'}
-            </div>
+            <div className="brand">cold call coach</div>
             <h1 style={{ marginTop: 4 }}>
               {view === 'history' ? 'Past calls' : 'Start a call'}
             </h1>
@@ -221,11 +216,11 @@ function StartScreen({ onStart }) {
 
       <section className="card">
         <div className="section__label">The eight stages</div>
-        <ol className="say" style={{ counterReset: 's' }}>
+        <ol className="stage-index">
           {sheet.stages.map((s) => (
-            <li key={s.number} style={{ borderLeftColor: 'var(--accent)' }}>
+            <li key={s.number}>
               <b>{s.name}</b>
-              <span className="say__mean">{s.purpose}</span>
+              <span>{s.purpose}</span>
             </li>
           ))}
         </ol>

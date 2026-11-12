@@ -217,7 +217,7 @@ function CallRow({ call, stageName }) {
                       ))}
                     </div>
                   )}
-                  {r.prospect_words && <div className="trail__words">“{r.prospect_words}”</div>}
+                  {r.prospect_words && <div className="trail__words">{r.prospect_words}</div>}
                 </div>
               ))}
             </div>

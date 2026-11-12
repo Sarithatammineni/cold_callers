@@ -256,9 +256,7 @@ export default function LiveCall({ initial, stages, onChange, onFinished }) {
     <>
       <header className="topbar">
         <div className="topbar__title">
-          <div className="brand">
-            <span className="brand__dot brand__dot--live" /> On a call
-          </div>
+          <div className="brand">on a call</div>
           <h1 style={{ marginTop: 4 }}>{call.prospect_name}</h1>
           {call.company && <p className="topbar__sub">{call.company}</p>}
         </div>
@@ -274,10 +272,10 @@ export default function LiveCall({ initial, stages, onChange, onFinished }) {
               saved.includes(s.number) && i !== stageIndex ? ' is-done' : ''
             }`}
             onClick={() => goToStage(i)}
-            title={s.name}
+            title={`${s.name}${saved.includes(s.number) ? ' — saved' : ''}`}
+            aria-current={i === stageIndex ? 'step' : undefined}
           >
             <span className="stagechip__n">{s.number}</span>
-            <span className="stagechip__tick">{saved.includes(s.number) ? '✓' : i === stageIndex ? '●' : ''}</span>
           </button>
         ))}
       </nav>
@@ -295,9 +293,7 @@ export default function LiveCall({ initial, stages, onChange, onFinished }) {
           {stage.name}
         </h2>
         <p className="purpose">
-          <b style={{ color: 'var(--text-faint)', fontSize: 12, letterSpacing: '0.12em', textTransform: 'uppercase', marginRight: 8 }}>
-            For
-          </b>
+          <span className="purpose__k">for</span>
           {stage.purpose}
         </p>
 
@@ -380,13 +376,10 @@ export default function LiveCall({ initial, stages, onChange, onFinished }) {
         </div>
         {nextStage ? (
           <button className="next-up" type="button" onClick={() => goToStage(stageIndex + 1)}>
-            <span>
-              <span className="next-up__k">Stage {nextStage.number}</span>
-              <span className="next-up__v">
-                {nextStage.name} — {nextStage.purpose}
-              </span>
+            <span className="next-up__k">next · stage {nextStage.number}</span>
+            <span className="next-up__v">
+              {nextStage.name} — {nextStage.purpose}
             </span>
-            <span className="next-up__arrow">›</span>
           </button>
         ) : (
           <p className="purpose" style={{ marginTop: 0 }}>

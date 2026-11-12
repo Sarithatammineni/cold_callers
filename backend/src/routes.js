@@ -11,6 +11,21 @@ const asyn = (fn) => (req, res, next) => Promise.resolve(fn(req, res, next)).cat
 
 const isNonEmptyString = (v) => typeof v === 'string' && v.trim().length > 0;
 
+/**
+ * Codes whose message is safe and useful to show. Everything else 5xx becomes
+ * a neutral sentence so internals never leak — but a model that timed out is
+ * something the caller can act on, so it must not be swallowed.
+ */
+const VISIBLE_CODES = new Set([
+  'DB_NOT_CONFIGURED',
+  'LLM_NOT_CONFIGURED',
+  'LLM_TIMEOUT',
+  'LLM_ERROR',
+  'LLM_EMPTY',
+  'LLM_QUOTA',
+  'ORIGIN_FORBIDDEN',
+]);
+
 function badRequest(message) {
   const err = new Error(message);
   err.status = 400;
@@ -313,9 +328,10 @@ router.use((err, _req, res, _next) => {
   const status = err.status || 500;
   if (status >= 500) console.error(err);
   res.status(status).json({
-    error: err.status >= 500 && err.code !== 'DB_NOT_CONFIGURED' && err.code !== 'LLM_NOT_CONFIGURED'
-      ? 'Something went wrong on the server.'
-      : err.message,
+    error:
+      err.status >= 500 && !VISIBLE_CODES.has(err.code)
+        ? 'Something went wrong on the server.'
+        : err.message,
     code: err.code || 'INTERNAL_ERROR',
     db_configured: dbConfigured,
   });

@@ -132,7 +132,13 @@ export default function LiveCall({ initial, stages, onChange, onFinished }) {
         error:
           err.code === 'LLM_NOT_CONFIGURED'
             ? 'No LLM key on the server, so no coaching line.'
-            : err.message,
+            : err.code === 'LLM_TIMEOUT'
+              ? 'The coach took too long to answer. Tap it again.'
+              : err.code === 'LLM_QUOTA'
+                ? 'The coach is out of model quota for now. The rest of the screen still works — try again later.'
+                : err.code === 'LLM_ERROR' || err.code === 'LLM_EMPTY'
+                  ? 'The coach could not answer just now. Tap it again.'
+                  : err.message,
       });
     }
   }

@@ -38,7 +38,7 @@ regenerated into `schema/seed_stages.sql` with `npm run seed:stages`.
 
 ## The LLM
 
-**Google Gemini (`gemini-2.5-flash`)** on the AI Studio free tier, called from the Render
+**Google Gemini (`gemini-3.5-flash`)** on the AI Studio free tier, called from the Render
 backend only — the key never reaches the browser. It is used for two things:
 
 1. **In-call coach** — `POST /api/coach`. Given the current stage, what that stage is for,
@@ -50,6 +50,10 @@ backend only — the key never reaches the browser. It is used for two things:
 
 If no key is configured the endpoints answer `503` with a clear message and the rest of
 the product keeps working — no screen depends on the model.
+
+`gemini-3.5-flash` is a thinking model, so the coaching call sends
+`thinkingConfig: { thinkingBudget: 0 }` with an 800-token cap. Without it the reasoning
+tokens eat the output budget and the coaching JSON is truncated mid-string.
 
 ## Stack
 

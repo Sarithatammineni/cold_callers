@@ -29,7 +29,7 @@ router.get(
       uptime_seconds: Math.round((Date.now() - startedAt) / 1000),
       time: new Date().toISOString(),
       db,
-      llm: { configured: llmConfigured, model: process.env.GEMINI_MODEL || 'gemini-2.5-flash' },
+      llm: { configured: llmConfigured, model: process.env.GEMINI_MODEL || 'gemini-3.5-flash' },
     });
   })
 );

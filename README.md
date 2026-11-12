@@ -21,11 +21,16 @@ is saved, and a second screen lists past calls with the stage each one reached.
 | Part | State |
 | --- | --- |
 | The screen on Vercel | **Live** — builds clean, serves the app. It shows "Server asleep or unreachable" until the Render service exists. |
-| The API on Render | **Not created yet.** The Render account behind the API key has no payment method on file, and Render refuses `POST /v1/services` with `402 Payment information is required`. Create it from the dashboard (below) or add a card, then it deploys itself from `render.yaml`. |
-| Supabase tables | **Not created yet.** The secret key authenticates against the Data API, but DDL cannot be sent through PostgREST. Run the two SQL files in the Supabase SQL editor. |
+| The API on Render | **Live** — `cold-call-coach-api`, free plan, Oregon, auto-deploy from `main`, health check `/health`. Env vars set through the API. |
+| Supabase tables | **Blocked.** The project in `SUPABASE_URL` no longer resolves in public DNS (`NXDOMAIN`), so no client — Render included — can reach it. A Supabase project has to exist before the schema can go in; then run `supabase_schema.sql` and `seed_stages.sql` in its SQL editor. |
 
 `VITE_API_URL` on Vercel already points at `https://cold-call-coach-api.onrender.com`,
-the hostname `render.yaml` produces, so the screen needs no redeploy once the service exists.
+which is the live service, so the screen needed no redeploy when it came up. CORS allows the
+Vercel origin and refuses anything else with `403`.
+
+`/health` is bounded to 2.5 s. It used to wait on the database, and an unreachable host made
+it hang until Render's probe timed out and discarded the deploy; a health check that reports
+"database unreachable" is worth more than one that never answers.
 
 ## The eight stages
 

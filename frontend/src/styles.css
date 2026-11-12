@@ -1,28 +1,26 @@
 /* ==========================================================================
    Cold Call Coach
 
-   A printed call sheet, marked up with a highlighter. Black masthead and rules,
-   heavy grotesque headings, mono numerals for anything that is a number, and
-   highlighter yellow for the one thing that matters on the line right now.
-   Nothing is rounded, nothing glows, nothing floats.
+   Dark and quiet, the way a streaming interface is: one near-black ground, one
+   white type colour, one weight doing all the emphasis, and no accent hue
+   fighting the sentence you are trying to read. Emphasis is carried by
+   inversion and weight, never by colour.
    ========================================================================== */
 
 :root {
-  --page: #fffdf6;
-  --panel: #ffffff;
-  --ink: #14120e;
-  --ink-2: #3b3730;
-  --muted: #6d675a;
-  --hair: #ded7c4;
+  --bg: #0b0b0b;
+  --bg-2: #101010;
+  --surface: #171717;
+  --surface-2: #1f1f1f;
 
-  --marker: #ffe14c;
-  --marker-soft: #fff5c2;
+  --line: #2b2b2b;
+  --line-2: #3d3d3d;
 
-  --red: #c0321a;
-  --green: #1c6b41;
+  --text: #f2f2f2;
+  --text-2: #a8a8a8;
+  --text-3: #737373;
 
-  --display: "Archivo Black", "Arial Black", Impact, sans-serif;
-  --text: "Archivo", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --text-stack: "Archivo", "Helvetica Neue", Helvetica, Arial, sans-serif;
   --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
 }
 
@@ -38,12 +36,13 @@ body,
 
 body {
   margin: 0;
-  background: var(--page);
-  color: var(--ink);
-  font-family: var(--text);
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--text-stack);
   font-size: 15px;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 button,
@@ -55,24 +54,24 @@ select {
 }
 
 ::selection {
-  background: var(--marker);
-  color: var(--ink);
+  background: #f2f2f2;
+  color: #0b0b0b;
 }
 
 .app {
   min-height: 100%;
   display: flex;
   flex-direction: column;
-  max-width: 600px;
+  max-width: 620px;
   margin: 0 auto;
   padding: 0 20px calc(44px + env(safe-area-inset-bottom));
 }
 
 .app--wide {
-  max-width: 920px;
+  max-width: 940px;
 }
 
-/* ------------------------------------------------------------------ masthead */
+/* ------------------------------------------------------------------ topbar */
 
 .topbar {
   position: sticky;
@@ -82,9 +81,9 @@ select {
   align-items: flex-end;
   gap: 14px;
   margin: 0 -20px;
-  padding: 14px 20px 13px;
-  background: var(--ink);
-  color: var(--page);
+  padding: 16px 20px 14px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
 }
 
 .topbar__title {
@@ -93,13 +92,12 @@ select {
 }
 
 .topbar h1 {
-  margin: 6px 0 0;
-  font-family: var(--display);
-  font-size: 23px;
-  font-weight: 400;
-  line-height: 1;
-  letter-spacing: -0.03em;
-  text-transform: uppercase;
+  margin: 5px 0 0;
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  color: #ffffff;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -108,7 +106,7 @@ select {
 .topbar__sub {
   margin: 5px 0 0;
   font-size: 12.5px;
-  color: rgba(255, 253, 246, 0.6);
+  color: var(--text-3);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -116,39 +114,29 @@ select {
 
 .brand {
   font-family: var(--mono);
-  font-size: 10px;
+  font-size: 9.5px;
   font-weight: 500;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--marker);
+  color: var(--text-3);
 }
 
 .timer {
   flex: 0 0 auto;
-  padding: 3px 7px;
-  background: var(--marker);
-  color: var(--ink);
+  padding: 3px 8px;
+  background: var(--surface-2);
+  border: 1px solid var(--line-2);
+  border-radius: 2px;
   font-family: var(--mono);
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 13.5px;
   font-variant-numeric: tabular-nums;
-  letter-spacing: 0.01em;
+  color: var(--text);
 }
 
 .topbar .btn {
   flex: 0 0 auto;
-  padding: 7px 11px;
-  background: transparent;
-  border: 2px solid var(--page);
-  border-radius: 0;
-  font-size: 11px;
-  color: var(--page);
-}
-
-.topbar .btn:hover:not(:disabled) {
-  background: var(--marker);
-  border-color: var(--marker);
-  color: var(--ink);
+  padding: 7px 12px;
+  font-size: 12.5px;
 }
 
 /* -------------------------------------------------------------- stage strip */
@@ -170,39 +158,46 @@ select {
   min-width: 36px;
   height: 34px;
   padding: 0;
-  background: var(--page);
-  border: 1.5px solid var(--ink);
-  border-radius: 0;
+  background: transparent;
+  border: 1px solid var(--line-2);
+  border-radius: 2px;
   cursor: pointer;
-  transition: background 0.1s;
+  transition: background 0.12s, border-color 0.12s;
 }
 
 .stagechip__n {
   font-family: var(--mono);
   font-size: 13px;
   font-weight: 500;
-  color: var(--ink);
+  color: var(--text-3);
 }
 
 .stagechip.is-done {
-  background: var(--marker);
+  background: var(--surface-2);
+  border-color: #4a4a4a;
+}
+
+.stagechip.is-done .stagechip__n {
+  color: var(--text);
 }
 
 .stagechip.is-current {
-  background: var(--ink);
+  background: #ffffff;
+  border-color: #ffffff;
 }
 
 .stagechip.is-current .stagechip__n {
-  color: var(--page);
+  color: #0b0b0b;
 }
 
-/* -------------------------------------------------------------------- panel */
+/* -------------------------------------------------------------------- card */
 
 .card {
   margin-top: 16px;
   padding: 20px;
-  background: var(--panel);
-  border: 2px solid var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 4px;
 }
 
 .card__eyebrow {
@@ -215,72 +210,63 @@ select {
   font-size: 10px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: var(--text-3);
 }
 
 .stage-name {
   margin: 0;
-  font-family: var(--display);
   font-size: 29px;
-  font-weight: 400;
-  line-height: 1;
-  letter-spacing: -0.03em;
-  text-transform: uppercase;
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+  color: #ffffff;
 }
 
 .stage-name__n {
-  display: inline-block;
-  margin-right: 9px;
-  padding: 1px 6px 2px;
-  background: var(--marker);
+  margin-right: 8px;
   font-family: var(--mono);
-  font-size: 19px;
-  font-weight: 500;
+  font-size: 18px;
+  font-weight: 400;
   letter-spacing: 0;
-  vertical-align: 3px;
+  color: var(--text-3);
 }
 
 .purpose {
   margin: 14px 0 0;
   font-size: 15.5px;
-  line-height: 1.5;
-  color: var(--ink-2);
+  line-height: 1.55;
+  color: #c9c9c9;
 }
 
 .purpose__k {
-  margin-right: 7px;
-  padding: 1px 5px;
-  background: var(--marker);
+  margin-right: 8px;
   font-family: var(--mono);
   font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  vertical-align: 1px;
+  color: var(--text-3);
 }
 
 /* ----------------------------------------------------------------- section */
 
 .section {
   margin-top: 24px;
-  padding-top: 16px;
-  border-top: 2px solid var(--ink);
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
 }
 
 .section__label {
   margin-bottom: 12px;
   font-family: var(--mono);
-  font-size: 10.5px;
+  font-size: 10px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--ink-2);
+  color: var(--text-3);
 }
 
 .section__label b {
-  padding: 1px 4px;
-  background: var(--marker);
   font-weight: 500;
-  color: var(--ink);
+  color: #ffffff;
 }
 
 /* -------------------------------------------------- what prospects say */
@@ -294,12 +280,13 @@ select {
 }
 
 .say li {
-  padding: 11px 13px;
-  background: var(--panel);
-  border: 1.5px solid var(--ink);
-  border-left: 6px solid var(--marker);
+  padding: 12px 14px;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 2px;
   font-size: 15px;
   line-height: 1.45;
+  color: #dedede;
 }
 
 .say__mean {
@@ -307,36 +294,34 @@ select {
   margin-top: 6px;
   font-size: 12.5px;
   line-height: 1.4;
-  color: var(--muted);
+  color: var(--text-3);
 }
 
 .say__mean b {
-  padding: 0 3px;
-  background: var(--marker-soft);
-  font-weight: 600;
-  color: var(--ink);
+  font-weight: 500;
+  color: #bdbdbd;
 }
 
 .watchout {
   margin-top: 12px;
-  padding: 11px 13px;
-  border: 2px solid var(--red);
+  padding: 12px 14px;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 2px;
   font-size: 13.5px;
   line-height: 1.45;
-  color: var(--ink-2);
+  color: #cfcfcf;
 }
 
 .watchout b {
-  display: inline-block;
+  display: block;
   margin-bottom: 6px;
-  padding: 2px 6px;
-  background: var(--red);
   font-family: var(--mono);
   font-size: 9.5px;
   font-weight: 500;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--page);
+  color: var(--text-3);
 }
 
 /* -------------------------------------------------------------------- taps */
@@ -350,25 +335,26 @@ select {
 .tap {
   padding: 9px 12px;
   text-align: left;
-  background: var(--panel);
-  border: 1.5px solid var(--ink);
-  border-radius: 0;
+  background: transparent;
+  border: 1px solid var(--line-2);
+  border-radius: 2px;
   font-size: 13.5px;
   font-weight: 500;
-  color: var(--ink);
+  color: #d0d0d0;
   cursor: pointer;
-  transition: background 0.1s;
+  transition: background 0.12s, color 0.12s, border-color 0.12s;
 }
 
 .tap:hover {
-  background: var(--marker-soft);
+  border-color: #6a6a6a;
+  color: #ffffff;
 }
 
 .tap.is-on {
-  background: var(--marker);
-  border-width: 2px;
-  padding: 8.5px 11.5px;
-  font-weight: 700;
+  background: #ffffff;
+  border-color: #ffffff;
+  color: #0b0b0b;
+  font-weight: 600;
 }
 
 /* --------------------------------------------------------- prospect words */
@@ -378,89 +364,78 @@ select {
   min-height: 118px;
   resize: vertical;
   padding: 12px 14px;
-  background: var(--panel);
-  border: 1.5px solid var(--ink);
-  border-left: 6px solid var(--marker);
-  border-radius: 0;
-  font-family: var(--text);
-  font-size: 16px;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  font-family: var(--text-stack);
+  font-size: 15.5px;
   line-height: 1.45;
-  color: var(--ink);
+  color: #ededed;
 }
 
 .words::placeholder {
   font-size: 14px;
-  color: var(--muted);
+  color: var(--text-3);
 }
 
 .words:focus {
-  outline: 3px solid var(--marker);
-  outline-offset: -1px;
+  outline: none;
+  border-color: #f2f2f2;
 }
 
 .hint {
   margin: 8px 0 0;
-  font-family: var(--mono);
-  font-size: 10.5px;
-  letter-spacing: 0.04em;
-  color: var(--muted);
+  font-size: 12px;
+  color: var(--text-3);
 }
 
 /* ------------------------------------------------------------------ button */
 
 .btn {
   padding: 11px 16px;
-  background: var(--page);
-  border: 2px solid var(--ink);
-  border-radius: 0;
-  font-family: var(--text);
+  background: transparent;
+  border: 1px solid #4a4a4a;
+  border-radius: 2px;
   font-size: 12.5px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--ink);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: #ededed;
   cursor: pointer;
-  transition: background 0.1s, color 0.1s;
+  transition: background 0.12s, color 0.12s, border-color 0.12s;
 }
 
 .btn:hover:not(:disabled) {
-  background: var(--ink);
-  color: var(--page);
+  background: #ffffff;
+  border-color: #ffffff;
+  color: #0b0b0b;
 }
 
 .btn:disabled {
-  opacity: 0.4;
+  opacity: 0.45;
   cursor: not-allowed;
 }
 
 .btn--primary {
-  background: var(--ink);
-  border-color: var(--ink);
-  color: var(--page);
+  background: #ffffff;
+  border-color: #ffffff;
+  color: #0b0b0b;
 }
 
 .btn--primary:hover:not(:disabled) {
-  background: var(--marker);
-  border-color: var(--ink);
-  color: var(--ink);
+  background: #d6d6d6;
+  border-color: #d6d6d6;
 }
 
 .btn--ghost {
   background: transparent;
-  border-color: var(--ink);
-  color: var(--ink);
+  border-color: var(--line-2);
+  color: #d8d8d8;
 }
 
 .btn--danger {
   background: transparent;
-  border-color: var(--red);
-  color: var(--red);
-}
-
-.btn--danger:hover:not(:disabled) {
-  background: var(--red);
-  border-color: var(--red);
-  color: var(--page);
+  border-color: #6a6a6a;
+  color: #ededed;
 }
 
 .btn--block {
@@ -482,26 +457,26 @@ select {
 .next-up {
   display: block;
   width: 100%;
-  padding: 12px 14px;
+  padding: 14px 16px;
   text-align: left;
-  background: var(--marker-soft);
-  border: 1.5px solid var(--ink);
-  border-radius: 0;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 2px;
   cursor: pointer;
+  transition: background 0.12s;
 }
 
 .next-up:hover {
-  background: var(--marker);
+  background: #262626;
 }
 
 .next-up__k {
   display: block;
   font-family: var(--mono);
   font-size: 9.5px;
-  font-weight: 500;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--ink-2);
+  color: var(--text-3);
 }
 
 .next-up__v {
@@ -509,7 +484,7 @@ select {
   margin-top: 5px;
   font-size: 15px;
   line-height: 1.4;
-  color: var(--ink);
+  color: #e8e8e8;
 }
 
 /* ------------------------------------------------------------------ coach */
@@ -517,15 +492,16 @@ select {
 .coach-out {
   margin-top: 14px;
   padding: 16px;
-  background: var(--ink);
-  color: var(--page);
+  background: var(--bg-2);
+  border: 1px solid #333333;
+  border-radius: 2px;
 }
 
 .coach-out__line {
   margin: 0 0 10px;
   font-size: 16.5px;
   line-height: 1.45;
-  letter-spacing: -0.005em;
+  color: #f2f2f2;
 }
 
 .coach-out__line:last-child {
@@ -535,10 +511,10 @@ select {
 .coach-out__watch {
   margin-top: 12px;
   padding-top: 11px;
-  border-top: 1px solid rgba(255, 253, 246, 0.22);
+  border-top: 1px solid var(--line);
   font-size: 13px;
   line-height: 1.45;
-  color: var(--marker);
+  color: var(--text-2);
 }
 
 .coach-out__watch b {
@@ -548,6 +524,7 @@ select {
   font-weight: 500;
   letter-spacing: 0.14em;
   text-transform: uppercase;
+  color: var(--text-3);
 }
 
 /* ----------------------------------------------------------------- status */
@@ -555,28 +532,26 @@ select {
 .note {
   margin-top: 14px;
   padding: 10px 12px;
-  background: var(--marker-soft);
-  border-left: 5px solid var(--ink);
+  background: var(--surface-2);
+  border-left: 2px solid #8a8a8a;
+  border-radius: 2px;
   font-size: 13.5px;
   line-height: 1.45;
-  color: var(--ink);
+  color: #dcdcdc;
 }
 
 .note--error {
-  background: #fbe9e4;
-  border-left-color: var(--red);
-  color: #92250f;
+  border-left-color: #f2f2f2;
 }
 
 .note--ok {
-  background: #e5f3e9;
-  border-left-color: var(--green);
-  color: #14562f;
+  border-left-color: #6f6f6f;
 }
 
 .skeleton {
   height: 14px;
-  background: var(--hair);
+  background: #242424;
+  border-radius: 2px;
 }
 
 /* ---------------------------------------------------------------- outcome */
@@ -591,50 +566,51 @@ select {
   align-items: flex-start;
   gap: 12px;
   width: 100%;
-  padding: 12px 14px;
+  padding: 13px 15px;
   text-align: left;
-  background: var(--panel);
-  border: 1.5px solid var(--ink);
-  border-radius: 0;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 2px;
   font-size: 15px;
-  font-weight: 500;
-  color: var(--ink);
+  color: #dcdcdc;
   cursor: pointer;
+  transition: border-color 0.12s, background 0.12s;
 }
 
 .outcome:hover {
-  background: var(--marker-soft);
+  border-color: #5a5a5a;
 }
 
 .outcome.is-on {
-  background: var(--marker);
-  border-width: 2px;
-  padding: 11.5px 13.5px;
+  background: #ffffff;
+  border-color: #ffffff;
+  color: #0b0b0b;
 }
 
 .outcome__mark {
   flex: 0 0 auto;
-  width: 15px;
-  height: 15px;
+  width: 14px;
+  height: 14px;
   margin-top: 3px;
-  border: 2px solid var(--ink);
-  border-radius: 0;
+  border: 1px solid #7a7a7a;
+  border-radius: 50%;
 }
 
 .outcome.is-on .outcome__mark {
-  background: var(--ink);
+  border-color: #0b0b0b;
+  background: #0b0b0b;
+  box-shadow: inset 0 0 0 2.5px #ffffff;
 }
 
 .outcome__meta {
   display: block;
   margin-top: 2px;
   font-size: 12.5px;
-  font-weight: 400;
-  color: var(--ink-2);
+  color: var(--text-3);
 }
 
 .outcome.is-on .outcome__meta {
-  color: var(--ink);
+  color: #4a4a4a;
 }
 
 /* ---------------------------------------------------------------- history */
@@ -647,42 +623,43 @@ select {
 }
 
 .filter {
-  padding: 6px 10px;
-  background: var(--page);
-  border: 1.5px solid var(--ink);
-  border-radius: 0;
-  font-family: var(--mono);
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--ink);
+  padding: 7px 12px;
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  font-size: 12.5px;
+  color: var(--text-2);
   cursor: pointer;
+  transition: background 0.12s, color 0.12s, border-color 0.12s;
 }
 
 .filter:hover {
-  background: var(--marker-soft);
+  border-color: #5a5a5a;
+  color: var(--text);
 }
 
 .filter.is-on {
-  background: var(--ink);
-  color: var(--page);
+  background: #ffffff;
+  border-color: #ffffff;
+  color: #0b0b0b;
 }
 
 .callrow {
   display: block;
   width: 100%;
   margin-top: 10px;
-  padding: 14px 16px;
+  padding: 15px 17px;
   text-align: left;
-  background: var(--panel);
-  border: 2px solid var(--ink);
-  border-radius: 0;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 4px;
   cursor: pointer;
+  transition: background 0.12s, border-color 0.12s;
 }
 
 .callrow:hover {
-  background: #fffdf0;
+  background: #1c1c1c;
+  border-color: var(--line-2);
 }
 
 .callrow__top {
@@ -695,8 +672,9 @@ select {
   flex: 1;
   min-width: 0;
   font-size: 17px;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: -0.01em;
+  color: #ffffff;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -706,8 +684,7 @@ select {
   flex: 0 0 auto;
   font-family: var(--mono);
   font-size: 10.5px;
-  letter-spacing: 0.04em;
-  color: var(--muted);
+  color: var(--text-3);
 }
 
 .callrow__meta {
@@ -720,37 +697,35 @@ select {
 
 .badge {
   padding: 2px 6px;
-  background: var(--page);
-  border: 1.5px solid var(--ink);
-  border-radius: 0;
+  background: transparent;
+  border: 1px solid var(--line-2);
+  border-radius: 2px;
   font-family: var(--mono);
   font-size: 9.5px;
-  font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--ink);
+  color: var(--text-2);
   white-space: nowrap;
 }
 
 .badge--stage {
-  background: var(--ink);
-  color: var(--page);
+  background: #ffffff;
+  border-color: #ffffff;
+  color: #0b0b0b;
 }
 
 .badge--good {
-  background: #e5f3e9;
-  border-color: var(--green);
-  color: var(--green);
+  border-color: #6a6a6a;
+  color: #ffffff;
 }
 
 .badge--warm {
-  background: var(--marker);
+  color: #cfcfcf;
 }
 
 .badge--bad {
-  background: #fbe9e4;
-  border-color: var(--red);
-  color: var(--red);
+  color: #9a9a9a;
+  border-color: var(--line);
 }
 
 .trail {
@@ -762,7 +737,7 @@ select {
   display: grid;
   gap: 6px;
   padding-left: 12px;
-  border-left: 3px solid var(--ink);
+  border-left: 1px solid var(--line);
 }
 
 .trail__head {
@@ -772,13 +747,14 @@ select {
   gap: 7px;
   font-size: 13.5px;
   font-weight: 600;
+  color: #e8e8e8;
 }
 
 .trail__n {
   font-family: var(--mono);
   font-size: 11px;
-  font-weight: 500;
-  color: var(--ink-2);
+  font-weight: 400;
+  color: var(--text-3);
 }
 
 .trail__tags {
@@ -788,12 +764,12 @@ select {
 }
 
 .trail__words {
-  padding: 8px 10px;
-  background: var(--marker-soft);
-  border-left: 4px solid var(--marker);
+  padding: 9px 11px;
+  background: var(--surface-2);
+  border-radius: 2px;
   font-size: 14.5px;
   line-height: 1.45;
-  color: var(--ink);
+  color: #dedede;
 }
 
 /* --------------------------------------------------------------- start form */
@@ -807,38 +783,38 @@ select {
 .field label {
   font-family: var(--mono);
   font-size: 10px;
-  font-weight: 500;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: var(--text-3);
 }
 
 .field input {
-  padding: 7px 0;
+  padding: 9px 0;
   background: transparent;
   border: 0;
-  border-bottom: 2px solid var(--ink);
+  border-bottom: 1px solid var(--line-2);
   border-radius: 0;
-  font-size: 18px;
+  font-size: 17.5px;
   font-weight: 500;
   letter-spacing: -0.01em;
+  color: #ffffff;
 }
 
 .field input::placeholder {
   font-weight: 400;
-  color: var(--muted);
+  color: var(--text-3);
 }
 
 .field input:focus {
   outline: none;
-  background: var(--marker-soft);
+  border-bottom-color: #ffffff;
 }
 
 .big-lead {
   margin: 0;
-  font-size: 17.5px;
-  line-height: 1.45;
-  color: var(--ink-2);
+  font-size: 17px;
+  line-height: 1.5;
+  color: #c9c9c9;
 }
 
 .stage-index {
@@ -851,8 +827,8 @@ select {
 .stage-index li {
   position: relative;
   counter-increment: stage;
-  padding: 12px 0 12px 40px;
-  border-bottom: 1px solid var(--hair);
+  padding: 13px 0 13px 38px;
+  border-bottom: 1px solid var(--line);
 }
 
 .stage-index li:last-child {
@@ -864,42 +840,38 @@ select {
   content: counter(stage, decimal-leading-zero);
   position: absolute;
   left: 0;
-  top: 12px;
-  padding: 1px 4px;
-  background: var(--marker);
+  top: 15px;
   font-family: var(--mono);
   font-size: 11px;
-  font-weight: 500;
+  color: var(--text-3);
 }
 
 .stage-index b {
   display: block;
   margin-bottom: 2px;
   font-size: 15.5px;
-  font-weight: 700;
-  letter-spacing: -0.01em;
+  font-weight: 600;
+  color: #f2f2f2;
 }
 
 .stage-index span {
   display: block;
   font-size: 13.5px;
   line-height: 1.45;
-  color: var(--muted);
+  color: var(--text-3);
 }
 
 .footer-note {
   margin-top: auto;
   padding-top: 30px;
-  font-family: var(--mono);
-  font-size: 10.5px;
+  font-size: 11.5px;
   line-height: 1.8;
   text-align: center;
-  letter-spacing: 0.02em;
-  color: var(--muted);
+  color: var(--text-3);
 }
 
 .footer-note a {
-  color: var(--ink-2);
+  color: var(--text-2);
 }
 
 .spacer {
@@ -911,16 +883,11 @@ select {
     padding-top: 8px;
   }
 
-  .topbar {
-    padding-top: 16px;
-    padding-bottom: 15px;
-  }
-
   .topbar h1 {
-    font-size: 26px;
+    font-size: 27px;
   }
 
   .stage-name {
-    font-size: 34px;
+    font-size: 33px;
   }
 }

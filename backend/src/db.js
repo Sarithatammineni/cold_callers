@@ -29,11 +29,26 @@ export function dbError(error, fallbackMessage = 'Database request failed.') {
   return err;
 }
 
-/** Lightweight readiness probe used by /health. */
+/**
+ * Lightweight readiness probe used by /health.
+ *
+ * It is bounded: a database host that resolves badly or not at all could hang
+ * the request for minutes, and the platform reads a slow /health as "this
+ * service is down" and throws the deploy away. A health check answers in
+ * seconds or says it cannot reach the database, which is the truth either way.
+ */
+const PING_TIMEOUT_MS = 2500;
+
 export async function pingDb() {
   if (!dbConfigured) return { ok: false, configured: false, detail: 'not configured' };
+  const giveUp = new Promise((resolve) =>
+    setTimeout(() => resolve({ error: { message: `no answer in ${PING_TIMEOUT_MS}ms` } }), PING_TIMEOUT_MS)
+  );
   try {
-    const { error } = await supabase.from('calls').select('id').limit(1);
+    const { error } = await Promise.race([
+      supabase.from('calls').select('id').limit(1),
+      giveUp,
+    ]);
     if (error) return { ok: false, configured: true, detail: error.message };
     return { ok: true, configured: true, detail: 'reachable' };
   } catch (e) {

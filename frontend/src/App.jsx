@@ -78,10 +78,7 @@ export default function App() {
       {view !== 'live' && (
         <header className="topbar">
           <div className="topbar__title">
-            <div className="brand">cold call coach</div>
-            <h1 style={{ marginTop: 4 }}>
-              {view === 'history' ? 'Past calls' : 'Start a call'}
-            </h1>
+            <h1>{view === 'history' ? 'Past calls' : 'Start a call'}</h1>
           </div>
           {view === 'history' ? (
             <button className="btn btn--ghost" onClick={() => setView('start')}>

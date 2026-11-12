@@ -143,6 +143,11 @@ select {
   text-overflow: ellipsis;
 }
 
+/* When the title is the first thing in the bar it sits flush with the top. */
+.topbar__title h1:first-child {
+  margin-top: 0;
+}
+
 .topbar__sub {
   margin: 5px 0 0;
   font-size: 12.5px;

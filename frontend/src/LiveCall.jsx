@@ -55,11 +55,15 @@ export default function LiveCall({ initial, stages, onChange, onFinished }) {
       [stage.number]: { taps: [], words: '', ...(prev[stage.number] || {}), ...patch },
     }));
 
+  // Functional update: two quick taps must both land, not overwrite each
+  // other from the same stale render.
   const toggleTap = (label) =>
-    setAnswer({
-      taps: answer.taps.includes(label)
-        ? answer.taps.filter((t) => t !== label)
-        : [...answer.taps, label],
+    setAnswers((prev) => {
+      const current = prev[stage.number] || { taps: [], words: '' };
+      const taps = current.taps.includes(label)
+        ? current.taps.filter((t) => t !== label)
+        : [...current.taps, label];
+      return { ...prev, [stage.number]: { ...current, taps } };
     });
 
   async function saveStage({ advance = true, skipped = false } = {}) {

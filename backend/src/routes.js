@@ -18,6 +18,7 @@ const isNonEmptyString = (v) => typeof v === 'string' && v.trim().length > 0;
  */
 const VISIBLE_CODES = new Set([
   'DB_NOT_CONFIGURED',
+  'DB_UNAVAILABLE',
   'LLM_NOT_CONFIGURED',
   'LLM_TIMEOUT',
   'LLM_ERROR',

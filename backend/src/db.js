@@ -23,9 +23,18 @@ export function requireDb() {
 
 /** Normalises a Supabase error into an Error with an HTTP status. */
 export function dbError(error, fallbackMessage = 'Database request failed.') {
-  const err = new Error(error?.message || fallbackMessage);
+  const raw = error?.message || '';
+  const err = new Error(raw || fallbackMessage);
   err.status = error?.code === 'PGRST116' ? 404 : 500;
   err.code = error?.code || 'DB_ERROR';
+
+  // A database that cannot be reached is not an internal mystery: say so, and
+  // do not put a stack-flavoured string like "fetch failed" in front of a user.
+  if (/fetch failed|ENOTFOUND|EAI_AGAIN|ECONNREFUSED|ETIMEDOUT|network/i.test(raw)) {
+    err.status = 503;
+    err.code = 'DB_UNAVAILABLE';
+    err.message = 'The database is not reachable right now.';
+  }
   return err;
 }
 

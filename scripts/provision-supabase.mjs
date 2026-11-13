@@ -25,13 +25,16 @@ const token = (
   (existsSync('.supabase-token') ? readFileSync('.supabase-token', 'utf8') : '')
 ).trim();
 const renderKey = (process.env.RENDER_API_KEY || '').trim();
+// The database and the service config move independently: when the service
+// already points at the right project, applying SQL needs no redeploy.
+const sqlOnly = process.argv.includes('--sql-only');
 
 if (!token) {
   console.error('No Supabase access token. Set SUPABASE_ACCESS_TOKEN or create .supabase-token.');
   process.exit(1);
 }
-if (!renderKey) {
-  console.error('No Render API key. Set RENDER_API_KEY.');
+if (!renderKey && !sqlOnly) {
+  console.error('No Render API key. Set RENDER_API_KEY (or pass --sql-only).');
   process.exit(1);
 }
 
@@ -206,6 +209,11 @@ const rows = await sb(`/projects/${ref}/database/query`, {
   body: { query: 'select (select count(*) from stages) as stages, (select count(*) from calls) as calls' },
 });
 log(`tables answer: ${JSON.stringify(rows?.[0] ?? rows)}`);
+
+if (sqlOnly) {
+  console.log(`\nSchema and seed applied to ${url}. Render already points here, so no redeploy.`);
+  process.exit(0);
+}
 
 const key = await serviceKey(ref);
 const deployId = await pointRender(url, key);

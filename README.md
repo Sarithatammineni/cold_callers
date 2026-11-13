@@ -20,9 +20,19 @@ is saved, and a second screen lists past calls with the stage each one reached.
 
 | Part | State |
 | --- | --- |
-| The screen on Vercel | **Live** — builds clean, serves the app. It shows "Server asleep or unreachable" until the Render service exists. |
-| The API on Render | **Live** — `cold-call-coach-api`, free plan, Oregon, auto-deploy from `main`, health check `/health`. Env vars set through the API. |
-| Supabase tables | **Blocked.** The project in `SUPABASE_URL` no longer resolves in public DNS (`NXDOMAIN`), so no client — Render included — can reach it. A Supabase project has to exist before the schema can go in; then run `supabase_schema.sql` and `seed_stages.sql` in its SQL editor. |
+| The screen on Vercel | **Live** — builds clean, serves the app against the live API. |
+| The API on Render | **Live** — `cold-call-coach-api`, free plan, Oregon, auto-deploy from `main`, health check `/health`. Env vars set through the API. `/health` reports `db.ok: true` and `llm.configured: true`. |
+| Supabase tables | **Applied** — `supabase_schema.sql` and `seed_stages.sql` both ran against project `bfpftoceofvkuaqfkofk`; eight stages are in the table and it answers through the live API. |
+
+The deployed API was verified with the 26-check smoke suite (`BASE=https://cold-call-coach-api.onrender.com
+node scripts/smoke.mjs`): start a call, save three stage results with taps and the prospect's
+words verbatim, list, close with an outcome, LLM debrief, the coach — all 26 passing. The rows
+that run created were then deleted, so the live app starts with the stages and no calls.
+
+`scripts/provision-supabase.mjs` does the database half of this from the command line: it
+reuses the project `backend/.env` already points at, applies both SQL files through the
+Management API, and with `RENDER_API_KEY` set also stores the service key on Render, redeploys
+and waits for `/health` to report the database reachable. `--sql-only` stops after the SQL.
 
 `VITE_API_URL` on Vercel already points at `https://cold-call-coach-api.onrender.com`,
 which is the live service, so the screen needed no redeploy when it came up. CORS allows the

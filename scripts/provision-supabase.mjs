@@ -61,7 +61,26 @@ async function call(base, path, auth, { method = 'GET', body } = {}) {
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const log = (...a) => console.log('•', ...a);
 
+function projectBehindEnv() {
+  if (!existsSync('backend/.env')) return '';
+  const m = readFileSync('backend/.env', 'utf8').match(/^SUPABASE_URL=https:\/\/([a-z0-9]+)\.supabase\.co/m);
+  return m ? m[1] : '';
+}
+
 async function findOrCreateProject() {
+  // The project the deployed backend already talks to wins over everything:
+  // creating a second one would strand the live service on the old URL.
+  const pinned = projectBehindEnv();
+  if (pinned) {
+    try {
+      const p = await sb(`/projects/${pinned}`);
+      log(`using the project backend/.env already points at (${pinned}, ${p.status})`);
+      return pinned;
+    } catch (e) {
+      log(`project ${pinned} is not visible to this token (${e.status || 'error'}); looking for another`);
+    }
+  }
+
   const projects = await sb('/projects');
   const existing = (projects || []).find((p) => p.name === PROJECT_NAME);
   if (existing) {
